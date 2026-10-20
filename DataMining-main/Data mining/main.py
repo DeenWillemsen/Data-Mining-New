@@ -7,11 +7,12 @@ from gradient_boosting import gradient_boosting
 from logistic_regression import logistic_regression
 from Single_Classification_Tree import SCTree
 from mcnemar_test import mcnemar_test
+from RF_check import test_sentiment_accuracy
 
 
 print("Data preprocessing started")
 # Preprocess the data
-X_train_bow, X_test_bow, y_train, y_test, vectorizer = preprocess_data()
+X_train_bow, X_test_bow, y_train, y_test, vectorizer, sent_test = preprocess_data()
 
 predictions = {}
 
@@ -56,7 +57,10 @@ _, predictions['SCTree'] = SCTree(
     y_test
 )
 
-print (" -- McNemar's Test -- ")
+print(" -- testing Random Forest Sentiment Predictions -- ")
+test_sentiment_accuracy(y_test, predictions['Random Forests'], sent_test, "Random Forest")
+
+print ("\n -- McNemar's Test -- ")
 model_names = list(predictions.keys())
 pairs = list(itertools.combinations(model_names, 2))
 
@@ -87,3 +91,4 @@ for res in results_data:
     print(f"{res['Model A']:<22} | {res['Model B']:<22} | {pval:<12} | {sig_marker}")
 
 print("-" * 75)
+

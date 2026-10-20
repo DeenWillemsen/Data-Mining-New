@@ -24,11 +24,13 @@ def preprocess_data():
     )
 
     X = df["review_text"]
+    sentiments = df["Sentiment"]
 
     #training/test split
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, X_test, y_train, y_test, sent_train, sent_test = train_test_split(
         X,
         y,
+        sentiments,
         test_size=0.25,
         stratify=y,
         random_state=42
@@ -55,6 +57,5 @@ def preprocess_data():
     X_train_bow = vectorizer.fit_transform(X_train_processed)
     X_test_bow = vectorizer.transform(X_test_processed)
 
-    return X_train_bow, X_test_bow, y_train, y_test, vectorizer
 
-    #new
+    return X_train_bow, X_test_bow, y_train, y_test, vectorizer, sent_test

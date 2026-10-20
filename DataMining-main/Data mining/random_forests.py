@@ -1,7 +1,7 @@
 from itertools import product
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 def random_forest(X_train_bow, X_test_bow, y_train, y_test):
     param_grid = {
