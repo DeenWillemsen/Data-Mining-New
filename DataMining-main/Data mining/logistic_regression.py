@@ -13,8 +13,7 @@ from sklearn.metrics import (
 )
 
 
-def logistic_regression(
-    X_train_bow,
+def logistic_regression(X_train_bow,
     X_test_bow,
     y_train,
     y_test,

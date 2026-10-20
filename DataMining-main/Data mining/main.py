@@ -1,32 +1,30 @@
 print("MAIN SCRIPT STARTED")
-
+import itertools
 from preprocess_data import preprocess_data
 from multinomial_naive_bayes import multinomial_naive_bayes
 from random_forests import random_forest
 from gradient_boosting import gradient_boosting
 from logistic_regression import logistic_regression
+from Single_Classification_Tree import SCTree
+from mcnemar_test import mcnemar_test
 
-"""
-To test whether the difference in accuracy between two classifiers
-is significant, use McNemar’s test [2], with significance level α = 0.01
-"""
 
 print("Data preprocessing started")
 # Preprocess the data
 X_train_bow, X_test_bow, y_train, y_test, vectorizer = preprocess_data()
 
-print("MNNB started")
-# Run Multinomial Naive Bayes
-multinomial_naive_bayes(
+predictions = {}
+
+print(" -- MNNB -- ")
+_, predictions['MNNB'] = multinomial_naive_bayes(
     X_train_bow,
     X_test_bow,
     y_train,
     y_test
 )
-#new
 
 print("\n -- Random Forest -- ")
-random_forest(
+_, predictions['Random Forests'] = random_forest(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -34,7 +32,7 @@ random_forest(
 )
 
 print("\n -- Gradient Boosting -- ")
-gradient_boosting(
+_, predictions['Gradient Boosting'] = gradient_boosting(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -42,10 +40,50 @@ gradient_boosting(
 )
 
 print("\n -- Logistic Regression -- ")
-logistic_regression(
+_, predictions['Logistic Regression'] = logistic_regression(
     X_train_bow,
     X_test_bow,
     y_train,
     y_test,
     vectorizer
 )
+
+print(" -- Single Classification Tree --")
+_, predictions['SCTree'] = SCTree(
+    X_train_bow,
+    X_test_bow,
+    y_train,
+    y_test
+)
+
+print (" -- McNemar's Test -- ")
+model_names = list(predictions.keys())
+pairs = list(itertools.combinations(model_names, 2))
+
+# Collect results quietly
+results_data = []
+for name1, name2 in pairs:
+    test_result = mcnemar_test(
+        y_test, 
+        predictions[name1], 
+        predictions[name2], 
+        name1, 
+        name2, 
+        alpha=0.01
+    )
+    results_data.append(test_result)
+
+
+# ----- AI GENERATED CODE ---- -> Generated purely for easier visualization of McNemar's Test
+print(f"\n{'Model A':<22} | {'Model B':<22} | {'P-Value':<12} | {'Significant?'}")
+print("-" * 75)
+
+for res in results_data:
+    pval = f"{res['P-Value']:.4e}"
+    sig = res['Significant (alpha=0.01)']
+
+    sig_marker = f"🟢 {sig}" if sig == "Yes" else f"⚪ {sig}"
+    
+    print(f"{res['Model A']:<22} | {res['Model B']:<22} | {pval:<12} | {sig_marker}")
+
+print("-" * 75)

@@ -9,7 +9,7 @@ nltk.download('wordnet')
 def preprocess_data():
 
     #load dataset
-    df = pd.read_csv("all_data.csv")
+    df = pd.read_csv("DataMining-main\\Data mining\\all_data.csv")
 
     #filter on english
     df = df[df["Review_Language"] == "English"].copy()
