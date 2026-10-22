@@ -1,7 +1,7 @@
+import re
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer
-
+from sklearn.feature_extraction.text import CountVectorizer, ENGLISH_STOP_WORDS
 from nltk.stem import WordNetLemmatizer
 import nltk
 nltk.download('wordnet')
@@ -40,8 +40,8 @@ def preprocess_data():
     lemmatizer = WordNetLemmatizer()
 
     def lemmatize_text(text):
-        words = text.lower().split()
-        words = [lemmatizer.lemmatize(word) for word in words]
+        words = re.findall(r"\b\w\w+\b", text.lower())
+        words = [w if w in ENGLISH_STOP_WORDS else lemmatizer.lemmatize(w) for w in words]
         return " ".join(words)
 
     X_train_processed = X_train.apply(lemmatize_text)

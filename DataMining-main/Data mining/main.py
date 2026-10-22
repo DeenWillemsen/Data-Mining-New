@@ -8,6 +8,7 @@ from logistic_regression import logistic_regression
 from Single_Classification_Tree import SCTree
 from mcnemar_test import mcnemar_test
 from RF_check import test_sentiment_accuracy
+from top_features import top_features
 
 
 print("Data preprocessing started")
@@ -15,9 +16,10 @@ print("Data preprocessing started")
 X_train_bow, X_test_bow, y_train, y_test, vectorizer, sent_test = preprocess_data()
 
 predictions = {}
+models = {}
 
 print(" -- MNNB -- ")
-_, predictions['MNNB'] = multinomial_naive_bayes(
+models['MNNB'], predictions['MNNB'] = multinomial_naive_bayes(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -25,7 +27,7 @@ _, predictions['MNNB'] = multinomial_naive_bayes(
 )
 
 print("\n -- Random Forest -- ")
-_, predictions['Random Forests'] = random_forest(
+models['Random Forests'], predictions['Random Forests'] = random_forest(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -33,7 +35,7 @@ _, predictions['Random Forests'] = random_forest(
 )
 
 print("\n -- Gradient Boosting -- ")
-_, predictions['Gradient Boosting'] = gradient_boosting(
+models['Gradient Boosting'], predictions['Gradient Boosting'] = gradient_boosting(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -41,7 +43,7 @@ _, predictions['Gradient Boosting'] = gradient_boosting(
 )
 
 print("\n -- Logistic Regression -- ")
-_, predictions['Logistic Regression'] = logistic_regression(
+models['Logistic Regression'], predictions['Logistic Regression'] = logistic_regression(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -50,7 +52,7 @@ _, predictions['Logistic Regression'] = logistic_regression(
 )
 
 print(" -- Single Classification Tree --")
-_, predictions['SCTree'] = SCTree(
+models['SCTree'], predictions['SCTree'] = SCTree(
     X_train_bow,
     X_test_bow,
     y_train,
@@ -64,7 +66,7 @@ print ("\n -- McNemar's Test -- ")
 model_names = list(predictions.keys())
 pairs = list(itertools.combinations(model_names, 2))
 
-# Collect results quietly
+# Collect results 
 results_data = []
 for name1, name2 in pairs:
     test_result = mcnemar_test(
@@ -92,3 +94,7 @@ for res in results_data:
 
 print("-" * 75)
 
+
+print("\n -- Top 5 features -- ")
+for name, model in models.items():
+    top_features(model, name, vectorizer, X_train_bow, y_train)

@@ -1,24 +1,14 @@
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
-
-
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    confusion_matrix
-)
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
 
 def multinomial_naive_bayes(X_train_bow, X_test_bow, y_train, y_test):
 
     #candidate hyperparameters for smoothing
     param_grid = {
-        "alpha": [0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+        "alpha": [0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0],
+        "fit_prior": [True, False]
     }
 
     #select the best alpha using 5-fold cross-validation
@@ -57,6 +47,3 @@ def multinomial_naive_bayes(X_train_bow, X_test_bow, y_train, y_test):
     print(confusion_matrix(y_test, y_pred))
 
     return model, y_pred
-
-
-    #new

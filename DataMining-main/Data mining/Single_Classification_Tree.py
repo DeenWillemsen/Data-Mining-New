@@ -19,9 +19,9 @@ def SCTree(X_train_bow, X_test_bow, y_train, y_test):
         results.append((d, mean_acc))
         
 
-    # Get depth with the highest accuracy
-    best_depth = max(results, key=lambda x: x[1])[0]
+    best_depth, best_acc = max(results, key=lambda x: x[1])
     print(f"\nBest depth selected: {best_depth}")
+    print(f"Best CV accuracy: {best_acc:.4f}")
 
     dt = DecisionTreeClassifier(max_depth=best_depth, random_state=42, class_weight="balanced")
     dt.fit(X_train_bow, y_train)

@@ -9,13 +9,18 @@ def mcnemar_test(y_true, preds_1, preds_2, name_1, name_2, alpha=0.01):
 
     # [[Both correct, Model 1 correct / Model 2 wrong],
     #  [Model 1 wrong / Model 2 correct, Both wrong]]
-    yy = np.sum(correct_1 & correct_2)
-    yn = np.sum(correct_1 & ~correct_2)
-    ny = np.sum(~correct_1 & correct_2)
-    nn = np.sum(~correct_1 & ~correct_2)
+    yy = int(np.sum(correct_1 & correct_2))
+    yn = int(np.sum(correct_1 & ~correct_2))
+    ny = int(np.sum(~correct_1 & correct_2))
+    nn = int(np.sum(~correct_1 & ~correct_2))
     
     table = [[yy, yn],
              [ny, nn]]
+
+    print(f"\n{name_1} vs {name_2}")
+    print(f"{'':<12}{name_2 + ' correct':>25}{name_2 + ' wrong':>25}")
+    print(f"{name_1 + ' correct':<12}{yy:>25}{yn:>25}")
+    print(f"{name_1 + ' wrong':<12}{ny:>25}{nn:>25}")
     
     result = mcnemar(table, exact=False, correction=True)
     is_significant = "Yes" if result.pvalue < alpha else "No"
@@ -25,5 +30,6 @@ def mcnemar_test(y_true, preds_1, preds_2, name_1, name_2, alpha=0.01):
         "Model B": name_2,
         "Chi-Square": result.statistic,
         "P-Value": result.pvalue,
-        f"Significant (alpha={alpha})": is_significant
+        f"Significant (alpha={alpha})": is_significant,
+        "Table": table
     }

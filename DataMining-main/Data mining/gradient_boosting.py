@@ -25,7 +25,7 @@ def gradient_boosting(X_train_bow, X_test_bow, y_train, y_test):
             learning_rate=params['learning_rate'],
             min_samples_split=params['min_samples_split'],
             min_samples_leaf=params['min_samples_leaf'],
-            n_estimators=100, #test with only 100 estimators. More estimators takes far too long to test.
+            n_estimators=300, #test with only 300 estimators. More estimators takes far too long to test.
             max_depth=params['max_depth'],
             subsample=0.9,
             max_features=4,
@@ -38,14 +38,15 @@ def gradient_boosting(X_train_bow, X_test_bow, y_train, y_test):
         results.append((params, mean_acc))
 
 
-    best_params = max(results, key=lambda x: x[1])[0]
+    best_params, best_acc = max(results, key=lambda x: x[1])
     print(f"\nBest params selected: {best_params}")
+    print(f"Best CV accuracy: {best_acc:.4f}")
 
     gb = GradientBoostingClassifier(
         learning_rate=best_params['learning_rate'],
         min_samples_split=best_params['min_samples_split'],
         min_samples_leaf=best_params['min_samples_leaf'],
-        n_estimators=900,
+        n_estimators=300,
         max_depth=best_params['max_depth'],
         subsample=0.9,
         max_features=4,
